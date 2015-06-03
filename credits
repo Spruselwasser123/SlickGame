@@ -1,0 +1,56 @@
+package slickgame;
+
+import org.lwjgl.input.Mouse;
+import org.newdawn.slick.*;
+import org.newdawn.slick.state.*;
+
+public class Credits extends BasicGameState 
+{
+    //Mouse Input
+    public String mouse = "No input yet!";
+    
+
+
+    public Credits(int state)
+    {
+        
+    }
+    @Override
+    public void init(GameContainer gc, StateBasedGame sbg) throws SlickException
+    {
+
+    }
+
+    @Override
+    public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException
+    {
+        //Mouse position
+        g.drawString(mouse, 390, 10);
+        g.drawString("This game is written and produced by Julien Dedek", 100, 100);
+        g.drawString("2015", 300, 150 );
+    }
+
+    public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException
+    {
+        Input input = gc.getInput();
+    
+        //Mouse Input
+        int xpos = Mouse.getX();
+        int ypos = Mouse.getY();
+        mouse = "Mouse position x:" + xpos + " y: " + ypos; 
+    
+        // Menu Choice
+        if((xpos>75&&xpos>175) && (ypos>120&&ypos<260))
+        {
+            if(input.isMouseButtonDown(0))
+            {
+                sbg.enterState(0);
+            }
+        }
+    }
+
+    public int getID()
+    {
+        return 2;
+    }
+}
