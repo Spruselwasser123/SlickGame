@@ -1,0 +1,48 @@
+package slickgame;
+
+import org.newdawn.slick.*;
+import org.newdawn.slick.state.*;
+
+
+public class SlickGame extends StateBasedGame{
+    
+    public static final String gamename = "My Game";
+    public static final int menu = 0;
+    public static final int play = 1;
+    public static final int level_1 = 3;
+    public static final int credits = 2;
+    
+    public SlickGame(String gamename)
+    {
+        super(gamename);
+        this.addState(new Menu(menu));
+        this.addState(new Play(play));
+        this.addState(new Level_1(level_1));
+        this.addState(new Credits(credits));
+    }
+    
+    @Override
+    public void initStatesList(GameContainer gc) throws SlickException
+    {
+        this.getState(menu).init(gc, this);
+        this.getState(play).init(gc, this);
+        this.getState(level_1).init(gc, this);
+        this.getState(credits).init(gc, this);
+        this.enterState(menu);
+    }
+ 
+    public static void main(String[] arguments)
+    {
+        AppGameContainer appgc;
+        
+        try{
+            appgc = new AppGameContainer(new SlickGame(gamename));
+            appgc.setDisplayMode(640, 360, false);
+            appgc.start();
+        }catch(SlickException e){
+            e.printStackTrace();
+        }
+        
+    }
+}
+ 
