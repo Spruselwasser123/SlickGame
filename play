@@ -1,0 +1,149 @@
+package slickgame;
+
+import org.newdawn.slick.*;
+import org.newdawn.slick.state.*;
+import org.newdawn.slick.tiled.TiledMap; 
+
+
+public class Play extends BasicGameState{
+    
+    //Animations
+    Animation hero,  movingUp, movingDown, movingLeft, movingRight;
+    
+    //Map
+    TiledMap worldMap;
+    
+    //Game Menu Variables
+    boolean quit = false;
+    
+    //Position/Movement
+    int [] duration = {200, 200};
+    float heroPositionX = 0;
+    float heroPositionY = 0;   
+    float shiftX = heroPositionX + 320;
+    float shiftY = heroPositionY + 160;
+
+
+    public Play(int state)
+    {
+        
+    }
+    
+
+    @Override
+    public void init(GameContainer gc, StateBasedGame sbg) throws SlickException
+    {
+        //Loading Map
+        try
+        {
+            worldMap = new TiledMap ("res/level_1.tmx");
+        }catch(NumberFormatException e)
+        {
+            e.getMessage();
+        }
+        
+        //Hero Sprites
+        Image [] walkUp   = {new Image("res/zph1_bk1.png"), new Image("res/zph1_bk2.png")};
+        Image [] walkDown = {new Image("res/zph1_fr1.png"), new Image("res/zph1_fr2.png")};
+        Image [] walkLeft = {new Image("res/zph1_lf1.png"), new Image("res/zph1_lf2.png")};
+        Image [] walkRight= {new Image("res/zph1_rt1.png"), new Image("res/zph1_rt2.png")};
+        
+        //Hero Movement 
+        movingUp = new Animation(walkUp, duration, false);
+        movingDown = new Animation(walkDown, duration, false);
+        movingRight = new Animation(walkRight, duration, false);
+        movingLeft = new Animation(walkLeft, duration, false);
+        
+        //InitMovement
+        hero = movingDown;
+    }
+    
+
+    @Override
+    public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException
+    {     
+        // Draw Map
+        worldMap.render(Math.round(heroPositionX),Math.round(heroPositionY));
+        
+        // Draw Characters
+        hero.draw(shiftX, shiftY);
+        
+        //Hero position Display
+        g.drawString("Hero Pos X: " +heroPositionX+"\nHero Pos Y: "+heroPositionY, 475 , 10);
+        
+        // Quit Menu
+        if(quit == true)
+        {
+            g.drawString("Resume (R)", 250 ,100);
+            g.drawString("Main Menu (M)", 250 ,150);
+            g.drawString("Quit Game (Q)", 250 ,200);
+            
+        }
+    }
+    
+
+    @Override
+    public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException
+    {
+        
+         //Keyboard Input
+        Input input = gc.getInput();
+        
+        if(input.isKeyDown(Input.KEY_UP))
+        {
+            hero = movingUp;
+            heroPositionY += delta * .1f;
+            hero.update(delta);
+        }
+        
+        if(input.isKeyDown(Input.KEY_DOWN))
+        {
+           hero = movingDown;
+           heroPositionY -= delta * .1f;
+           hero.update(delta);
+        }
+        
+        if(input.isKeyDown(Input.KEY_LEFT))
+        {
+           hero = movingLeft;
+           heroPositionX += delta * .1f;
+           hero.update(delta);
+        } 
+        
+        if(input.isKeyDown(Input.KEY_RIGHT))
+        {
+           hero = movingRight;
+           heroPositionX -= delta * .1f;
+           hero.update(delta);
+        }
+        
+        
+        //Game Menu
+        if(input.isKeyDown(Input.KEY_ESCAPE))
+        {
+            quit = true;
+        }   
+        
+        if(input.isKeyDown(Input.KEY_R))
+        {
+             quit = false; 
+        }
+           
+        if(input.isKeyDown(Input.KEY_M))
+        {
+             sbg.enterState(0); 
+        }
+           
+        if(input.isKeyDown(Input.KEY_Q))
+        {
+              gc.exit();
+        }
+
+    }
+
+    @Override
+    public int getID()
+    {
+        return 1;
+    }
+}
